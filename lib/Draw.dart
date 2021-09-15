@@ -12,6 +12,7 @@ class DrawPage extends StatefulWidget {
 
 class _DrawPageState extends State<DrawPage> {
   final _tc = TextEditingController();
+  final _color = [Colors.white70, Colors.orangeAccent];
 
   late Future<List<City>> _citylist;
   List<City> _nowcitylist = [];
@@ -52,31 +53,25 @@ class _DrawPageState extends State<DrawPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('드로우' + '/' + _isnull),
-        actions: <Widget>[
-          OutlinedButton(
-              onPressed: (){
-                _drawCard(context, _nowcitylist);
-              },
-              child: Text('드로우',style: TextStyle(color: Colors.white,fontSize: 17),),
-          ),
-        ],
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Padding(
-            padding: EdgeInsets.all(5),
-            child: TextField(
-              controller: _tc,
-              decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: '검색',
-                  hintText: '검색할 도시를 입력하세요'
+          Spacer(),
+          _widget(),
+          Spacer(),
+          SizedBox(
+            width: double.infinity,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+              child: ElevatedButton(
+                onPressed: (){
+                  _drawCard(context, _nowcitylist);
+                },
+                child: Text('드로우',style: TextStyle(color: Colors.white,fontSize: 20),),
               ),
-              onChanged: (String txt){setState(() {});},
             ),
-          ),
-          _widget()
+          )
         ],
       ),
     );
@@ -100,7 +95,7 @@ class _DrawPageState extends State<DrawPage> {
     else return Expanded(child: _listView(widget.undrawnCard!.where((element) => element.cardNum != 0).toList()));
   }
 
-  ListView _listView(List<City> _data){
+  Widget _listView(List<City> _data){
     void _func(int index){
       setState(() {
         if(_cardNum[index] < _data[index].cardNum!) _cardNum[index]++;
@@ -109,6 +104,38 @@ class _DrawPageState extends State<DrawPage> {
         }
       });
     }
+    return GridView.builder(
+        itemCount: _data.where((element) => element.cityName.startsWith(_tc.text)).toList().length,
+        shrinkWrap: true,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 4,
+          childAspectRatio: 2.3,
+        ),
+        itemBuilder: (BuildContext context, int index){
+          return Padding(
+              padding: EdgeInsets.all(3),
+            child: GestureDetector(
+              onTap: (){
+                setState(() {
+                  _checkedList[index] = !_checkedList[index];
+                });
+                if(!_checkedList[index]) _cardNum[index] = 0;
+                if(_checkedList[index] && _cardNum[index] == 0) _cardNum[index]++;
+              },
+              child: Container(
+                padding: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                    color: _color[_booltoint(_checkedList[index])],
+                    border: Border.all(),
+                    borderRadius: BorderRadius.circular(5)
+                ),
+                child: Text(_data.where((element) => element.cityName.startsWith(_tc.text)).toList()[index].cityName,style: TextStyle(fontSize: 17),),
+              ),
+            ),
+          );
+        }
+    );
+    /*
     return ListView.builder(
         itemCount: _data.where((element) => element.cityName.startsWith(_tc.text)).toList().length,
         itemBuilder: (BuildContext context, int index){
@@ -150,7 +177,7 @@ class _DrawPageState extends State<DrawPage> {
             ),
           );
         }
-    );
+    );*/
   }
 
   void _drawCard(BuildContext _ctx, List<City> _data)async{
@@ -221,3 +248,7 @@ class _DrawPageState extends State<DrawPage> {
   }
 }
 
+int _booltoint(bool _bool){
+  if(_bool){ return 1;}
+  else {return 0;}
+}
