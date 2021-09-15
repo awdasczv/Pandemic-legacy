@@ -54,26 +54,26 @@ class _DrawPageState extends State<DrawPage> {
       appBar: AppBar(
         title: Text('드로우' + '/' + _isnull),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Spacer(),
-          _widget(),
-          Spacer(),
-          SizedBox(
-            width: double.infinity,
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
-              child: ElevatedButton(
-                onPressed: (){
-                  _drawCard(context, _nowcitylist);
-                },
-                child: Text('드로우',style: TextStyle(color: Colors.white,fontSize: 20),),
+      body:Center(
+        child:  Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Expanded(child: Center(child: _widget(),)),
+            SizedBox(
+              width: double.infinity,
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+                child: ElevatedButton(
+                  onPressed: (){
+                    _drawCard(context, _nowcitylist);
+                  },
+                  child: Text('드로우',style: TextStyle(color: Colors.white,fontSize: 20),),
+                ),
               ),
-            ),
-          )
-        ],
-      ),
+            )
+          ],
+        ),
+      )
     );
   }
 
