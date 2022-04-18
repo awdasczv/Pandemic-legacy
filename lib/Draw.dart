@@ -58,7 +58,7 @@ class _DrawPageState extends State<DrawPage> {
         child:  Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Expanded(child: Center(child: _widget(),)),
+            _widget(),
             SizedBox(
               width: double.infinity,
               child: Padding(
